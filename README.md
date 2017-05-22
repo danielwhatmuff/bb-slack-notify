@@ -1,5 +1,4 @@
 # deploybot
-:robot_face:
 
 ## Overview
 * Install and execute this CLI from within your Travis jobs to notify a Slack channel on deployment events.
