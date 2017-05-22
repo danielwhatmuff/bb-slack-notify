@@ -1,0 +1,82 @@
+#!/usr/bin/env python
+"""
+Notify a slack channel of new Travis deployments.
+
+Args:
+    -c --channel        Slack Channel to post in (without the #)
+    -t --token          Slack Token used for authentication (Must specify this or webhook, not both)
+    -w --webhook        Use this incoming webhook url instead of an API token.
+"""
+from slackclient import SlackClient
+import json
+import time
+import sys
+import os
+import argparse
+import requests
+
+
+if not os.environ.get('TRAVIS_BRANCH') or not os.environ.get('TRAVIS_BUILD_NUMBER') or not os.environ.get('TRAVIS_REPO_SLUG'):
+    print('This CLI must be run from within a Travis CI build')
+    sys.exit()
+else:
+    # Convenience variables taken from https://docs.travis-ci.com/user/environment-variables/#Convenience-Variables
+    branch = os.environ.get('TRAVIS_BRANCH')
+    build_number = os.environ.get('TRAVIS_BUILD_NUMBER')
+    project_repo = os.environ.get('TRAVIS_REPO_SLUG')
+
+
+def parse_arguments():
+    PARSER = argparse.ArgumentParser(description='Travis Deployment Slack Notifier')
+    PARSER.add_argument('-c', '--channel', help="Slack Channel to notify")
+    PARSER.add_argument('-t', '--token', help="Slack API token", default=False)
+    PARSER.add_argument('-w', '--webhook', help="Slack Incoming Webhook URL", default=False)
+    return PARSER.parse_args()
+
+
+def notify_slack(message):
+    sc.api_call(
+        'chat.postMessage', 
+        channel=slack_channel,
+        text=message,
+        username='Travis-Deployment', 
+        icon_emoji=':robot_face:',
+    )
+
+
+ARGS = parse_arguments()
+slack_channel = '#{}'.format(ARGS.channel)
+token = ARGS.token
+webhook = ARGS.webhook
+
+
+def run():
+    if not token and not webhook:
+        print('You must specify either token or webhook')
+        sys.exit()
+    if token and webhook:
+        print('You can only specify token OR webhook')
+        sys.exit()
+    
+    message = 'Branch *{}* of project *{}* deployed by Travis CI, build number *{}*'.format(branch, project_repo, build_number)
+    
+    if token:
+        print('Notifying channel {} using API token').format(slack_channel)
+        sc = SlackClient(token)
+        notify_slack(message)
+
+    if webhook:
+        print('Notifying channel {} using webhook {}').format(slack_channel, webhook)
+        post_data={}
+        post_data['channel'] = slack_channel
+        post_data['username'] = 'Travis-Deployment'
+        post_data['icon_emoji'] = ':robot_face:'
+        post_data['text'] = message
+        response = requests.post(webhook, data=json.dumps(post_data))
+        if response.status_code == 200:
+            print('Notification successful')
+        else:
+            print('Notification error, response code {}'.format(response.status_code))
+            sys.exit()
+
+run()
