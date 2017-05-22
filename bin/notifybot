@@ -66,7 +66,7 @@ def run():
         notify_slack(message)
 
     if webhook:
-        print('Notifying channel {} using webhook {}').format(slack_channel, webhook)
+        print('Notifying channel {} using webhook').format(slack_channel)
         post_data={}
         post_data['channel'] = slack_channel
         post_data['username'] = 'Travis-Deployment'
