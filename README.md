@@ -6,9 +6,14 @@
 * Note: It only works from within Travis jobs, as it reads from the provided [Convenience Variables](https://docs.travis-ci.com/user/environment-variables/#Convenience-Variables)
 
 ## Example Travis YAML
+### Use a legacy API token
 ```yaml
 after_deploy:
   - pip install notifybot && notifybot -t your-api-token -c your-slack-channel
+```
+### Use an incoming webhook URL
+```yaml
+after_deploy:
   - pip install notifybot && notifybot -w https://your-slack-webhook-url -c your-slack-channel
 ```
 
