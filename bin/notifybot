@@ -48,6 +48,7 @@ ARGS = parse_arguments()
 slack_channel = '#{}'.format(ARGS.channel)
 token = ARGS.token
 webhook = ARGS.webhook
+sc = SlackClient(token)
 
 
 def run():
@@ -62,7 +63,6 @@ def run():
     
     if token:
         print('Notifying channel {} using API token').format(slack_channel)
-        sc = SlackClient(token)
         notify_slack(message)
 
     if webhook:
