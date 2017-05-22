@@ -10,7 +10,7 @@
 ```bash
 $ gem install travis
 $ travis encrypt SLACK_TOKEN=yourtoken --add
-$ travis encrypt SLACK_WEBHOOK=yourwebhook--add
+$ travis encrypt SLACK_WEBHOOK=yourwebhook --add
 ```
 ### Use a legacy API token
 ```yaml
