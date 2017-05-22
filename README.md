@@ -1,4 +1,5 @@
 # deploybot
+![](https://raw.githubusercontent.com/danielwhatmuff/notifybot/master/img/screenshot.png)
 
 ## Overview
 * Install and execute this CLI from within your Travis jobs to notify a Slack channel on deployment events.
