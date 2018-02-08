@@ -21,16 +21,16 @@ if not os.environ.get('BITBUCKET_COMMIT') or not os.environ.get('BITBUCKET_BUILD
     sys.exit()
 else:
     # Environment variables taken from https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
-    branch = os.environ.get('BITBUCKET_BRANCH', false)
-    tag = os.environ.get('BITBUCKET_TAG', false)
-    commit = os.environ.get('BITBUCKET_COMMIT', false)
+    branch = os.environ.get('BITBUCKET_BRANCH', False)
+    tag = os.environ.get('BITBUCKET_TAG', False)
+    commit = os.environ.get('BITBUCKET_COMMIT', False)
     build_number = os.environ.get('BITBUCKET_BUILD_NUMBER')
     project_repo = os.environ.get('BITBUCKET_REPO_SLUG')
 
 
 def parse_arguments():
     PARSER = argparse.ArgumentParser(description='Bitbucket Deployment Slack Notifier')
-    PARSER.add_argument('-c', '--channel', help="Slack Channel to notify")
+    PARSER.add_argument('-c', '--channel', help="Slack Channel to notify", required=True)
     PARSER.add_argument('-t', '--token', help="Slack API token", default=False)
     PARSER.add_argument('-w', '--webhook', help="Slack Incoming Webhook URL", default=False)
     return PARSER.parse_args()
@@ -62,11 +62,11 @@ def run():
         sys.exit()
 
     if tag:
-        message = 'Tag: *{}* _commit {}_ of project *{}* deployed by Bitbucket CI, build number *{}*'.format(tag, commit, project_repo, build_number)
+        message = 'Tag: *{}* _commit {}_ of project *{}* deployed by Bitbucket CI, build number *{}* link: https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(tag, commit, project_repo, build_number, project_repo, build_number)
     elif branch:
-        message = 'Branch *{}* _commit {}_ of project *{}* deployed by Bitbucket CI, build number *{}*'.format(branch, commit, project_repo, build_number)
+        message = 'Branch: *{}* _commit {}_ of project *{}* deployed by Bitbucket CI, build number *{}* link: https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(branch, commit, project_repo, build_number, project_repo, build_number)
     else:
-        message = 'Commit *{}* of project *{}* deployed by Bitbucket CI, build number *{}*'.format(commit, project_repo, build_number)
+        message = 'Commit: *{}* of project *{}* deployed by Bitbucket CI, build number *{}* link: https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(commit, project_repo, build_number, project_repo, build_number)
     
     if token:
         print('Notifying channel {} using API token').format(slack_channel)
