@@ -33,6 +33,7 @@ def parse_arguments():
     PARSER.add_argument('-c', '--channel', help="Slack Channel to notify", required=True)
     PARSER.add_argument('-t', '--token', help="Slack API token", default=False)
     PARSER.add_argument('-w', '--webhook', help="Slack Incoming Webhook URL", default=False)
+    PARSER.add_argument('-e', '--environment', help="Environment the pipeline deployed to", default=False)
     return PARSER.parse_args()
 
 
@@ -50,6 +51,7 @@ ARGS = parse_arguments()
 slack_channel = '#{}'.format(ARGS.channel)
 token = ARGS.token
 webhook = ARGS.webhook
+environment = ARGS.environment
 sc = SlackClient(token)
 
 
@@ -62,11 +64,14 @@ def run():
         sys.exit()
 
     if tag:
-        message = 'Tag: *{}* _commit {}_ of project *{}* deployed by Bitbucket CI, build number *{}* link: https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(tag, commit, project_repo, build_number, project_repo, build_number)
+        message = 'tag: *{}* _commit {}_ of *{}* deployed by Bitbucket pipeline *{}* https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(tag, commit, project_repo, build_number, project_repo, build_number)
     elif branch:
-        message = 'Branch: *{}* _commit {}_ of project *{}* deployed by Bitbucket CI, build number *{}* link: https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(branch, commit, project_repo, build_number, project_repo, build_number)
+        message = 'branch *{}* _commit {}_ of *{}* deployed by Bitbucket pipeline *{}* https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(branch, commit, project_repo, build_number, project_repo, build_number)
     else:
-        message = 'Commit: *{}* of project *{}* deployed by Bitbucket CI, build number *{}* link: https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(commit, project_repo, build_number, project_repo, build_number)
+        message = 'commit *{}* of *{}* deployed by Bitbucket pipeline *{}* https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(commit, project_repo, build_number, project_repo, build_number)
+
+    if environment:
+        message = '*{} environment*: {}'.format(environment.upper(), message)
     
     if token:
         print('Notifying channel {} using API token').format(slack_channel)
