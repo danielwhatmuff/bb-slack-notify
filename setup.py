@@ -10,7 +10,7 @@ here = path.abspath(path.dirname(__file__))
 
 setup(
     name='bb-slack-notify',
-    version='0.0.3',
+    version='0.0.4',
     description='Slack Notifications for Bitbucket Pipeline deploys',
     long_description='A CLI to notify Slack on pipeline deployments by API token or Incoming Webhook URL',
     url='https://github.com/danielwhatmuff/bb-slack-notify',
