@@ -17,12 +17,12 @@ pipelines:
         name: Deploy to prod, this can be triggered manually
         script:
           - python deploy_my_app.py
-          - pip install bb-slack-notify && bb-slack-notify -t $SLACK_TOKEN -c your-slack-channel
+          - pip install bb-slack-notify && bb-slack-notify -t $SLACK_TOKEN -c your-slack-channel -e prod
 ```
 ### Use an incoming webhook URL
 ```yaml
           ...
-          - pip install bb-slack-notify && bb-slack-notify -w $SLACK_WEBHOOK -c your-slack-channel
+          - pip install bb-slack-notify && bb-slack-notify -w $SLACK_WEBHOOK -c your-slack-channel -e prod
 ```
 
 ## Related docs
