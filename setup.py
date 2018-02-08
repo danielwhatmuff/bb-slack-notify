@@ -1,5 +1,5 @@
 """
-Setup.py for notifybot
+Setup.py for bb-slack-notify
 """
 
 from setuptools import setup, find_packages
@@ -9,11 +9,11 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='notifybot',
-    version='0.0.3',
-    description='Slack Notifications for Travis Deploys',
-    long_description='A CLI to notify Slack on Travis CI deployments by API token or Incoming Webhook URL',
-    url='https://github.com/danielwhatmuff/notifybot',
+    name='bb-slack-notify',
+    version='0.0.1',
+    description='Slack Notifications for Bitbucket Pipeline deploys',
+    long_description='A CLI to notify Slack on pipeline deployments by API token or Incoming Webhook URL',
+    url='https://github.com/danielwhatmuff/bb-slack-notify',
     author='Daniel Whatmuff',
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -23,8 +23,8 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
     ],
-    keywords='travis deployment slack notification',
-    py_modules=["notifybot"],
+    keywords='bitbucket pipelines deployment slack notification',
+    py_modules=["bb-slack-notify"],
     install_requires=['slackclient', 'requests'],
-    scripts=['bin/notifybot'],
+    scripts=['bin/bb-slack-notify'],
 )

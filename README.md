@@ -1,29 +1,31 @@
-# deploybot
-![](https://raw.githubusercontent.com/danielwhatmuff/notifybot/master/img/screenshot.png)
+# bb-slack-notify
+![](https://raw.githubusercontent.com/danielwhatmuff/bb-slack-notify/master/img/screenshot.png)
 
 ## Overview
-* Install and execute this CLI from within your Travis jobs to notify a Slack channel on deployment events.
-* Note: It only works from within Travis jobs, as it reads from the provided [Convenience Variables](https://docs.travis-ci.com/user/environment-variables/#Convenience-Variables)
+* Install and execute this CLI from within your Bitbucket Pipeline deployment steps to notify a Slack channel on deployment events.
+* Note: It only works from within Bitbucket pipelines, as it reads from the provided [Environment Variables](https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html)
 
-## Example Travis YAML
-### Be sure to encrypt your token or webhook URL
-```bash
-$ gem install travis
-$ travis encrypt SLACK_TOKEN=yourtoken --add
-$ travis encrypt SLACK_WEBHOOK=yourwebhook --add
-```
+## Example bitbucket-pipelines.yml YAML
 ### Use a legacy API token
+* Add your token or webhook URL as a secure environment variable within repository settings
 ```yaml
-after_deploy:
-  - pip install notifybot && notifybot -t $SLACK_TOKEN -c your-slack-channel
+---
+pipelines:
+  custom:
+    deploy-to-prod:
+    - step:
+        name: Deploy to prod, this can be triggered manually
+        script:
+          - python deploy_my_app.py
+          - pip install bb-slack-notify && bb-slack-notify -t $SLACK_TOKEN -c your-slack-channel
 ```
 ### Use an incoming webhook URL
 ```yaml
-after_deploy:
-  - pip install notifybot && notifybot -w $SLACK_WEBHOOK -c your-slack-channel
+          ...
+          - pip install bb-slack-notify && bb-slack-notify -w $SLACK_WEBHOOK -c your-slack-channel
 ```
 
 ## Related docs
 * [Webhooks](https://api.slack.com/incoming-webhooks)
 * [API Tokens](https://api.slack.com/custom-integrations/legacy-tokens)
-* [Travis Build Docs](https://docs.travis-ci.com/user/customizing-the-build)
+* [Bitbucket Pipelines](https://confluence.atlassian.com/bitbucket/configuring-your-pipeline-872013574.html)
