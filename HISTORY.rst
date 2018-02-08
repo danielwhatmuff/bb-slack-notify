@@ -18,3 +18,7 @@ History
 0.0.4
 +++++++++++++++++++++++
 * Tested successfully
+
+0.0.5
++++++++++++++++++++++++
+* Adding environment and ability to run help cmd locally
