@@ -16,7 +16,7 @@ import argparse
 import requests
 
 
-if not or not os.environ.get('BITBUCKET_COMMIT') or not os.environ.get('BITBUCKET_BUILD_NUMBER'):
+if not os.environ.get('BITBUCKET_COMMIT') or not os.environ.get('BITBUCKET_BUILD_NUMBER'):
     print('This CLI must be run from within a Bitbucket Pipeline build')
     sys.exit()
 else:
