@@ -16,18 +16,6 @@ import argparse
 import requests
 
 
-if not os.environ.get('BITBUCKET_COMMIT') or not os.environ.get('BITBUCKET_BUILD_NUMBER'):
-    print('This CLI must be run from within a Bitbucket Pipeline build')
-    sys.exit()
-else:
-    # Environment variables taken from https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
-    branch = os.environ.get('BITBUCKET_BRANCH', False)
-    tag = os.environ.get('BITBUCKET_TAG', False)
-    commit = os.environ.get('BITBUCKET_COMMIT', False)
-    build_number = os.environ.get('BITBUCKET_BUILD_NUMBER')
-    project_repo = os.environ.get('BITBUCKET_REPO_SLUG')
-
-
 def parse_arguments():
     PARSER = argparse.ArgumentParser(description='Bitbucket Deployment Slack Notifier')
     PARSER.add_argument('-c', '--channel', help="Slack Channel to notify", required=True)
@@ -47,15 +35,28 @@ def notify_slack(message):
     )
 
 
-ARGS = parse_arguments()
-slack_channel = '#{}'.format(ARGS.channel)
-token = ARGS.token
-webhook = ARGS.webhook
-environment = ARGS.environment
-sc = SlackClient(token)
-
-
 def run():
+    ARGS = parse_arguments()
+
+    if len(sys.argv) > 1:
+        if not os.environ.get('BITBUCKET_COMMIT') or not os.environ.get('BITBUCKET_BUILD_NUMBER'):
+            print('This CLI must be run from within a Bitbucket Pipeline build')
+            sys.exit()
+
+    slack_channel = '#{}'.format(ARGS.channel)
+    token = ARGS.token
+    webhook = ARGS.webhook
+    environment = ARGS.environment
+    sc = SlackClient(token)
+    
+    # Environment variables taken from https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
+    branch = os.environ.get('BITBUCKET_BRANCH', False)
+    tag = os.environ.get('BITBUCKET_TAG', False)
+    commit = os.environ.get('BITBUCKET_COMMIT', False)
+    build_number = os.environ.get('BITBUCKET_BUILD_NUMBER')
+    project_repo = os.environ.get('BITBUCKET_REPO_SLUG')
+
+
     if not token and not webhook:
         print('You must specify either token or webhook')
         sys.exit()
