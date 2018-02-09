@@ -22,3 +22,11 @@ History
 0.0.5
 +++++++++++++++++++++++
 * Adding environment and ability to run help cmd locally
+
+0.0.6
++++++++++++++++++++++++
+* Taking first 6 chars of commit hash only
+
+0.0.7
++++++++++++++++++++++++
+* Updating slug

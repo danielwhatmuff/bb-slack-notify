@@ -6,6 +6,7 @@ Args:
     -c --channel        Slack Channel to post in (without the #)
     -t --token          Slack Token used for authentication (Must specify this or webhook, not both)
     -w --webhook        Use this incoming webhook url instead of an API token.
+    -e --environment    Specify the environment being deployed (optional)
 """
 from slackclient import SlackClient
 import json
@@ -55,6 +56,7 @@ def run():
     commit = os.environ.get('BITBUCKET_COMMIT', False)[0:6]
     build_number = os.environ.get('BITBUCKET_BUILD_NUMBER')
     project_repo = os.environ.get('BITBUCKET_REPO_SLUG')
+    project_owner = os.environ.get('BITBUCKET_REPO_OWNER')
 
 
     if not token and not webhook:
@@ -64,12 +66,14 @@ def run():
         print('You can only specify token OR webhook')
         sys.exit()
 
+    pipeline_url = 'https://bitbucket.org/{}/{}/addon/pipelines/home#!/results/{}'.format(project_owner, project_repo, build_number)
+
     if tag:
-        message = 'tag: *{}* _commit {}_ of *{}* deployed by Bitbucket pipeline *{}* https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(tag, commit, project_repo, build_number, project_repo, build_number)
+        message = 'Tag: *{}* _commit {}_ of *{}/{}* deployed by Bitbucket pipeline - {}'.format(tag, commit, project_owner, project_repo, pipeline_url)
     elif branch:
-        message = 'branch *{}* _commit {}_ of *{}* deployed by Bitbucket pipeline *{}* https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(branch, commit, project_repo, build_number, project_repo, build_number)
+        message = 'Branch: *{}* _commit {}_ of *{}/{}* deployed by Bitbucket pipeline - {}'.format(branch, commit, project_owner, project_repo, pipeline_url)
     else:
-        message = 'commit *{}* of *{}* deployed by Bitbucket pipeline *{}* https://bitbucket.org/{}/addon/pipelines/home#!/results/{}'.format(commit, project_repo, build_number, project_repo, build_number)
+        message = 'Commit {} of *{}/{}* deployed by Bitbucket pipeline - {}'.format(commit, project_owner, project_repo, pipeline_url)
 
     if environment:
         message = '*{} environment*: {}'.format(environment.upper(), message)
