@@ -52,7 +52,7 @@ def run():
     # Environment variables taken from https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
     branch = os.environ.get('BITBUCKET_BRANCH', False)
     tag = os.environ.get('BITBUCKET_TAG', False)
-    commit = os.environ.get('BITBUCKET_COMMIT', False)
+    commit = os.environ.get('BITBUCKET_COMMIT', False)[0:6]
     build_number = os.environ.get('BITBUCKET_BUILD_NUMBER')
     project_repo = os.environ.get('BITBUCKET_REPO_SLUG')
 
